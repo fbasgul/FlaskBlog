@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block contente %}
+
+        <!-- Page Header-->
+        <header class="masthead" style="background-image: url('assets/img/post-bg.jpg')">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="post-heading">
+                            <h1>{{post.title}}</h1>
+                            <h2 class="subheading">{{post.subtitle}}</h2>
+                            <span class="meta">
+                                Posted by
+                                <a href="#!">{{post.user.name}}</a>
+                                on {{post.post_date.strftime('%B, %d, %Y')}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Post Content-->
+        <article class="mb-4">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    {% with messages=get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category,message in messages %}
+                             <div class="alert alert-{{ category }}"> <!-- category success' ten geliyor .. created','success') -->
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <p>{{post.post_text}}</p>
+                    </div>
+                    {% if post.user==current_user %}
+                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-warning text-uppercase" style="margin-right:20px" href="{{url_for ('editpost',post_id=post.id)}}">Edit Post</a>
+                    <form action="{{url_for ('deletepost',post_id=post.id)}}" method="POST">
+                        <input class="btn btn-danger text-uppercase" type="submit" value="Delete Post">
+                    </form></div>
+                    {% endif %}
+                </div>
+            </div>
+        </article>
+
+{% endblock %}

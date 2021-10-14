@@ -1,8 +1,8 @@
 from flask import render_template,flash,redirect,url_for,abort,request
 from wtforms.validators import Email
-from CleanBlog import app,db
-from CleanBlog.forms import RegisterForm,LoginForm,PostForm
-from CleanBlog.models import User,Post
+from CleanBlog import app,db,mail,Message
+from CleanBlog.forms import ContactForm, RegisterForm,LoginForm,PostForm
+from CleanBlog.models import User,Post,Contact
 from flask_login import login_user,current_user,logout_user,login_required
 
 @app.route("/")
@@ -99,3 +99,24 @@ def deletepost(post_id):
     db.session.commit()
     flash(f'Post is deleted','danger')
     return redirect(url_for('index'))
+
+@app.route("/contact",methods=["GET","POST"])
+def contact():
+    form=ContactForm()
+    if request.method=="POST":
+        if form.validate_on_submit():
+            contactadd=Contact(name=form.name.data, email=form.email.data, phone=form.phone.data,contact_text=form.contact_text.data)
+            db.session.add(contactadd)
+            db.session.commit()
+            msg=Message(form.name.data,sender="CleanBlog Contact Form",recipients=["fikretba@gmail.com"])
+            msg.body="""
+            From: %s
+            <%s>
+            %s""" % (form.email.data,form.phone.data,form.contact_text.data)
+            # mail.send(msg)
+            flash(f'{form.name.data} opinion message has been sent','success')
+            return redirect(url_for('contact'))
+        else:
+            flash(f'{form.name.data} opinion message has been sent','success')
+    elif request.method=="GET":
+        return render_template("contact.html",title='CONTACT',form=form)

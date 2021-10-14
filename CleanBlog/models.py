@@ -37,3 +37,20 @@ class Post(db.Model):
 
     def __repr__(self):
         return f'Post: {self.title}, {self.subtitle}'
+
+class Contact(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    name=db.Column(db.String,nullable=False)
+    email=db.Column(db.String,nullable=False)
+    phone=db.Column(db.String,nullable=False)
+    contact_date=db.Column(db.DateTime,nullable=False,default=datetime.now)
+    contact_text=db.Column(db.Text,nullable=False)
+
+    def __init__(self,name,email,phone,contact_text):
+        self.name=name
+        self.email=email
+        self.phone=phone
+        self.contact_text=contact_text
+
+    def __repr__(self):
+        return f'Contact: {self.name}, {self.email}'

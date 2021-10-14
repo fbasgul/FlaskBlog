@@ -20,3 +20,10 @@ class PostForm(FlaskForm):
     post_text=TextAreaField('Post Text',validators=[DataRequired()])
     submit=SubmitField('Add Post')
     submitedit=SubmitField('Change Post')
+
+class ContactForm(FlaskForm):
+    name=StringField('Name',validators=[DataRequired()])
+    email=StringField('Email',validators=[DataRequired(),Email()])
+    phone=StringField('Phone',validators=[DataRequired()])
+    contact_text=TextAreaField('Message',validators=[DataRequired()])
+    submit=SubmitField('Submit')

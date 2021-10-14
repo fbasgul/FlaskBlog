@@ -8,8 +8,11 @@ from flask_login import login_user,current_user,logout_user,login_required
 @app.route("/")
 @app.route("/home")
 def index():
-    posts=Post.query.order_by(Post.id.desc()).all()
-    return render_template("index.html",title='HOME',posts=posts)
+    sayfa=request.args.get('sayfa',1,type=int)
+    posts=Post.query.order_by(Post.id.desc()).paginate(page=sayfa,per_page=3)
+    sonra_url=url_for('index',sayfa=posts.next_num) if posts.has_next else None
+    once_url=url_for('index',sayfa=posts.prev_num) if posts.has_prev else None
+    return render_template("index.html",title='HOME',posts=posts,next_url=sonra_url,prev_url=once_url)
 
 @app.route("/about")
 def about():
